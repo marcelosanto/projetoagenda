@@ -1,6 +1,6 @@
 import validator from "validator"
 
-export default class Login {
+export default class Contato {
   constructor(formClass) {
     this.form = document.querySelector(formClass)
   }
@@ -19,24 +19,35 @@ export default class Login {
 
   validate(e) {
     const el = e.target
+    const nomeInput = el.querySelector('input[name="nome"]')
     const emailInput = el.querySelector('input[name="email"]')
-    const passwordInput = el.querySelector('input[name="password"]')
+    const telefoneInput = el.querySelector('input[name="telefone"]')
+
     let error = false
 
     for (let errorText of this.form.querySelectorAll(".error-text")) {
       errorText.remove()
     }
 
-    if (!validator.isEmail(emailInput.value)) {
-      this.criaErro(emailInput, "E-mail inválido.")
+    if (!nomeInput.value) {
+      this.criaErro(nomeInput, "Nome nao pode ficar em branco")
       error = true
     }
 
-    if (passwordInput.value < 3 || passwordInput.value > 50) {
-      this.criaErro(passwordInput, "Senha precisa ter entre 3 e 50 caracteres.")
-      error = true
+    if (emailInput.value) {
+      if (!validator.isEmail(emailInput.value)) {
+        this.criaErro(emailInput, "E-mail inválido.")
+        error = true
+      }
     }
 
+    if (!emailInput.value && !telefoneInput.value) {
+      this.criaErro(
+        emailInput,
+        "Pelo menos um dos contatos precisa ser enviado: e-mail ou telefone."
+      )
+      error = true
+    }
 
     if (!error) el.submit()
   }
